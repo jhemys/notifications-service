@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { SendNotification } from '@application/useCases/sendNotificationUseCase';
 import { CreateNotificationBody } from '../dtos/create-notification-body';
 import { NotificationViewModel } from '../viewModels/notificationViewModel';
@@ -7,6 +7,7 @@ import { ReadNotification } from '@application/useCases/ReadNotificationUseCase'
 import { UnreadNotification } from '@application/useCases/unreadNotificationUseCase';
 import { CountRecipientNotifications } from '@application/useCases/countRecipientsNotificationsUseCase';
 import { GetRecipientNotifications } from '@application/useCases/getRecipientNotificationsUseCase';
+import { GetRecipientNotificationsByReadStatus } from '@application/useCases/getRecipientNotificationsByReadStatusUseCase';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -17,6 +18,7 @@ export class NotificationsController {
     private unreadNotification: UnreadNotification,
     private countRecipientNotifications: CountRecipientNotifications,
     private getRecipientNotifications: GetRecipientNotifications,
+    private getRecipientNotificationsByReadStatus: GetRecipientNotificationsByReadStatus,
   ) {}
 
   @Patch(':id/cancel')
@@ -29,6 +31,22 @@ export class NotificationsController {
     const { notifications } = await this.getRecipientNotifications.execute({
       recipientId,
     });
+
+    return {
+      notifications: notifications.map(NotificationViewModel.toHttp),
+    };
+  }
+
+  @Get('from/:recipientId/retrieved/:includeRetrieved')
+  async getFromRecipientByNotificationStatus(
+    @Param('recipientId') recipientId: string,
+    @Param('includeRetrieved') includeRetrieved: boolean,
+  ) {
+    const { notifications } =
+      await this.getRecipientNotificationsByReadStatus.execute({
+        recipientId,
+        includeRetrieved,
+      });
 
     return {
       notifications: notifications.map(NotificationViewModel.toHttp),

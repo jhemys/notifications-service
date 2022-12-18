@@ -27,6 +27,18 @@ export class InMemoryNotificationRepository implements NotificationsRepository {
     );
   }
 
+  async findManyByRecipientIdAndReadStatus(
+    recipientId: string,
+    includeRetrieved: boolean,
+  ): Promise<Notification[]> {
+    return this.notifications.filter((item) => {
+      return (
+        item.recipientId === recipientId &&
+        (includeRetrieved || (!includeRetrieved && !item.readAt))
+      );
+    });
+  }
+
   async create(notification: Notification) {
     this.notifications.push(notification);
   }

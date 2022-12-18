@@ -7,6 +7,7 @@ import { CountRecipientNotifications } from '@application/useCases/countRecipien
 import { GetRecipientNotifications } from '@application/useCases/getRecipientNotificationsUseCase';
 import { ReadNotification } from '@application/useCases/ReadNotificationUseCase';
 import { UnreadNotification } from '@application/useCases/unreadNotificationUseCase';
+import { GetRecipientNotificationsByReadStatus } from '@application/useCases/getRecipientNotificationsByReadStatusUseCase';
 
 @Module({
   imports: [DatabaseModule],
@@ -16,6 +17,7 @@ import { UnreadNotification } from '@application/useCases/unreadNotificationUseC
     CancelNotification,
     CountRecipientNotifications,
     GetRecipientNotifications,
+    GetRecipientNotificationsByReadStatus,
     ReadNotification,
     UnreadNotification,
   ],
